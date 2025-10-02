@@ -1,0 +1,155 @@
+package UI;
+
+import Game.Game;
+import Game.Cell;
+import Game.Direction;
+
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class ConsoleUI {
+    private final Scanner scanner = new Scanner(System.in);
+    private final Game game = new Game();
+
+
+    // Map meret megadas, game inicializalasa
+    public void start() {
+        int size = -1;
+        while (size == -1) {
+            System.out.println("What size should the map be (small, medium, big): ");
+            switch (scanner.nextLine().toLowerCase()) {
+                case ("small") :
+                    size = 10;
+                    break;
+                case ("medium") :
+                    size = 15;
+                    break;
+                case ("big") :
+                    size = 20;
+                    break;
+                default:
+                    System.out.println("That's not a valid answer!");
+                    break;
+            }
+        }
+        game.start(size);
+        showTable();
+        shipPlacement();
+
+        showTable();
+        System.out.println("Your table is set!");
+
+        gameLoop();
+    }
+
+    // Hajo adatok bekerese es tovabbitasa a player osztalynak
+    public void shipPlacement() {
+        while(!game.areTablesSet()) {
+            int length;
+            int[] position = new int[2];
+            Direction direction;
+
+
+            String validNumbers = game.getPlayer().getTable().getAvailable().stream().map(String::valueOf).collect(Collectors.joining(", "));
+            System.out.print("What length is your ship you want to add? (" + validNumbers + ") (if you want to skip this, type: random)\n");
+
+            try {
+                length = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                if (scanner.nextLine().equalsIgnoreCase("random")) {
+                    game.getPlayer().randomPlacement();
+                    break;
+                }
+                System.out.println("That's not a number!");
+                scanner.nextLine();
+                continue;
+            }
+            if (game.getPlayer().isValidLength(length)) {
+                do {
+                    showTable();
+                    System.out.println("What position should it start from? (example: A01) (you can back with: back)");
+                    String temp = scanner.nextLine().toUpperCase();
+                    if (temp.equals("BACK")) { break; }
+
+                    if (temp.length() == 3 && Character.isLetter(temp.charAt(0)) && Character.isDigit(temp.charAt(1)) && Character.isDigit(temp.charAt(2))) {
+                        position[0] = temp.charAt(0) - 'A';
+                        position[1] = (temp.charAt(1) - '0') * 10 + (temp.charAt(2) - '1');
+                        do {
+                            System.out.println("Where should it face? (North, South, East, West) (you can back with: back)");
+                            temp = scanner.nextLine().toUpperCase();
+                            if (temp.equals("BACK")) { break; }
+
+                            try {
+                                direction = Direction.valueOf(temp);
+                            } catch (Exception e) {
+                                System.out.println("That's not a direction!");
+                                continue;
+                            }
+
+                            try {
+                                game.getPlayer().placeShip(position, direction ,length);
+                                showTable();
+                                System.out.println("Ship placed!");
+                                break;
+                            } catch (Exception e) {
+                                System.out.print(e.getMessage());
+                            }
+
+                        } while (true);
+                        if (!temp.equals("BACK")) { break; }
+                    } else {
+                        System.out.println("That's not a valid target!");
+                    }
+
+                } while (true);
+            } else {
+                System.out.println("You can only choose one of these numbers: " + validNumbers);
+            }
+
+        }
+    }
+
+    public void gameLoop() {
+        while(true) {
+
+        }
+    }
+
+    //kiirja a tablat
+    public void showTable() {
+        Cell[][] cells = game.getPlayer().getTable().getCells();
+
+        System.out.print("   ");
+
+        for (int i = 0; i < cells.length; i++) {
+            System.out.print((char)(i + 65) + " ");
+        }
+        System.out.println();
+
+        for (int i = 0; i < cells.length; i++) {
+            if (i < 9) System.out.print("0");
+            System.out.print(i + 1);
+
+            for (int j = 0; j < cells[i].length; j++) {
+                if (cells[j][i].isVisibility()) {
+                    switch (cells[j][i].getState()) {
+                        case EMPTY :
+                            System.out.print(" .");
+                            break;
+                        case SHIP :
+                            System.out.print(" X");
+                            break;
+                    }
+                } else {
+                    System.out.print(" *");
+                }
+            }
+            System.out.print("\n");
+        }
+    }
+
+    public void finish() {
+        scanner.close();
+    }
+}
