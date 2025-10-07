@@ -11,8 +11,6 @@ public class ConsoleUI {
     private final Scanner scanner = new Scanner(System.in);
     private final Game game = new Game();
 
-
-    // Map meret megadas, game inicializalasa
     public void start() {
         int size = -1;
         while (size == -1) {
