@@ -1,5 +1,9 @@
 package Game;
 
+/**
+ * Enum class for a {@link Ship}'s cardinal direction on the {@link Table}.
+ * It can be used for vector calculations.
+ */
 public enum Direction {
     NORTH(0, -1),
     SOUTH(0, 1),
