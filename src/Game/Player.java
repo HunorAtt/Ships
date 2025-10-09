@@ -4,12 +4,7 @@ import java.util.Random;
 
 /**
  * Player class is the base for players.
- * This class have methods for:
- * <ul>
- *     <li>Checking if a ship length is available</li>
- *     <li>{@link Ship} placement</li>
- *     <li>Random {@link Ship} placement</li>
- * </ul>
+ * Manages their {@link Table}.
  */
 
 public class Player {

@@ -8,7 +8,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
- * This class is responsible for communicating with the user.
+ * Responsible for communicating with the user.
  * Only this or other classes in the UI package should communicate
  * with the user, to separate the game logic and UI.
  * This class collects inputs and forwards it to the {@link Game}.
@@ -54,14 +54,13 @@ public class ConsoleUI {
     }
 
     /**
-     * This method is for getting input about ship parameters.
+     * Getting input about ship parameters.
      * These parameters are:
      * <ul>
      *     <li>Length</li>
      *     <li>Starting coordinates</li>
      *     <li>Cardinal direction</li>
      * </ul>
-     * Optionally calls the randomPlacement method from the player class.
      */
     public void shipPlacement() {
         while(true) {
@@ -138,9 +137,7 @@ public class ConsoleUI {
         }
     }
 
-    /**
-     * Prints the current state of the table to the console.
-     */
+
     public void showTable() {
         Cell[][] cells = game.getPlayer().getTable().getCells();
 

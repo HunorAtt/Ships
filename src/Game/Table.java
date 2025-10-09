@@ -60,7 +60,6 @@ public class Table {
 
     /**
      * Checks if the given {@link Ship} can be placed on the {@link Table}.
-     * Scans if it's out of boundaries or if another ship is in the way.
      *
      * @param ship The {@link Ship} to be to examined
      *
@@ -95,7 +94,7 @@ public class Table {
      *
      * @param ship The {@link Ship} to be placed
      */
-    protected void placeShip(Ship ship) {
+    void placeShip(Ship ship) {
         int XPos = ship.getPosition()[0];
         int YPos = ship.getPosition()[1];
         int length = ship.getLength();
