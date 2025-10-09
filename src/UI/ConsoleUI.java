@@ -128,6 +128,7 @@ public class ConsoleUI {
         }
     }
 
+    //TODO: <game loop>
     public void gameLoop() {
         while(true) {
 
@@ -167,6 +168,7 @@ public class ConsoleUI {
         }
     }
 
+    // TODO: <winning/losing screen>
     public void finish() {
         scanner.close();
     }
