@@ -128,9 +128,6 @@ public class ConsoleUI {
         }
     }
 
-    /**
-     * WIP
-     */
     public void gameLoop() {
         while(true) {
 
@@ -170,9 +167,6 @@ public class ConsoleUI {
         }
     }
 
-    /**
-     * WIP
-     */
     public void finish() {
         scanner.close();
     }
