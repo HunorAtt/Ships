@@ -7,12 +7,21 @@ import Game.Direction;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * Responsible for communicating with the user.
+ * Only this or other classes in the UI package should communicate
+ * with the user, to separate the game logic and UI.
+ * This class collects inputs and forwards it to the {@link Game}.
+ */
+
 public class ConsoleUI {
     private final Scanner scanner = new Scanner(System.in);
     private final Game game = new Game();
 
-
-    // Map meret megadas, game inicializalasa
+    /**
+     * This method starts the {@link Game}. Asks the user for {@link Game.Table} size and calls
+     * the shipPlacement method until the table is set.
+     */
     public void start() {
         int size = -1;
         while (size == -1) {
@@ -34,7 +43,9 @@ public class ConsoleUI {
         }
         game.start(size);
         showTable();
-        shipPlacement();
+        while (game.areTablesSet()) {
+            shipPlacement();
+        }
 
         showTable();
         System.out.println("Your table is set!");
@@ -42,9 +53,17 @@ public class ConsoleUI {
         gameLoop();
     }
 
-    // Hajo adatok bekerese es tovabbitasa a player osztalynak
+    /**
+     * Getting input about ship parameters.
+     * These parameters are:
+     * <ul>
+     *     <li>Length</li>
+     *     <li>Starting coordinates</li>
+     *     <li>Cardinal direction</li>
+     * </ul>
+     */
     public void shipPlacement() {
-        while(!game.areTablesSet()) {
+        while(true) {
             int length;
             int[] position = new int[2];
             Direction direction;
@@ -58,7 +77,7 @@ public class ConsoleUI {
                 scanner.nextLine();
             } catch (Exception e) {
                 if (scanner.nextLine().equalsIgnoreCase("random")) {
-                    game.getPlayer().randomPlacement();
+                    game.getPlayer().randomShipPlacement();
                     break;
                 }
                 System.out.println("That's not a number!");
@@ -66,7 +85,7 @@ public class ConsoleUI {
                 continue;
             }
             if (game.getPlayer().isValidLength(length)) {
-                do {
+                while (true) {
                     showTable();
                     System.out.println("What position should it start from? (example: A01) (you can back with: back)");
                     String temp = scanner.nextLine().toUpperCase();
@@ -75,7 +94,7 @@ public class ConsoleUI {
                     if (temp.length() == 3 && Character.isLetter(temp.charAt(0)) && Character.isDigit(temp.charAt(1)) && Character.isDigit(temp.charAt(2))) {
                         position[0] = temp.charAt(0) - 'A';
                         position[1] = (temp.charAt(1) - '0') * 10 + (temp.charAt(2) - '1');
-                        do {
+                        while (true) {
                             System.out.println("Where should it face? (North, South, East, West) (you can back with: back)");
                             temp = scanner.nextLine().toUpperCase();
                             if (temp.equals("BACK")) { break; }
@@ -91,18 +110,17 @@ public class ConsoleUI {
                                 game.getPlayer().placeShip(position, direction ,length);
                                 showTable();
                                 System.out.println("Ship placed!");
-                                break;
+                                return;
                             } catch (Exception e) {
                                 System.out.print(e.getMessage());
                             }
 
-                        } while (true);
-                        if (!temp.equals("BACK")) { break; }
+                        }
                     } else {
                         System.out.println("That's not a valid target!");
                     }
 
-                } while (true);
+                }
             } else {
                 System.out.println("You can only choose one of these numbers: " + validNumbers);
             }
@@ -110,13 +128,14 @@ public class ConsoleUI {
         }
     }
 
+    //TODO: <game loop>
     public void gameLoop() {
         while(true) {
 
         }
     }
 
-    //kiirja a tablat
+
     public void showTable() {
         Cell[][] cells = game.getPlayer().getTable().getCells();
 
@@ -149,6 +168,7 @@ public class ConsoleUI {
         }
     }
 
+    // TODO: <winning/losing screen>
     public void finish() {
         scanner.close();
     }

@@ -3,12 +3,22 @@ package Game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@link Player}'s table which they can interact with.
+ * It builds up of {@link Cell}s.
+ */
+
 public class Table {
-    private final Cell[][] cells;           // cells[x][y]
+    private final Cell[][] cells;           // cells[x coordinate][y coordinate]
     private List<Ship> ships;
     private List<Integer> available;
 
 
+    /**
+     * Creating a table with the same length and width.
+     *
+     * @param size The size of length and width.
+     */
     public Table(int size) {
         this.cells = new Cell[size][size];
         available = new ArrayList<>();
@@ -48,6 +58,14 @@ public class Table {
         }
     }
 
+    /**
+     * Checks if the given {@link Ship} can be placed on the {@link Table}.
+     *
+     * @param ship The {@link Ship} to be to examined
+     *
+     * @throws IndexOutOfBoundsException if the {@link Ship} is out of boundaries of the {@link Table}
+     * @throws IllegalArgumentException if another {@link Ship} is in the way
+     */
     public void validatePosition(Ship ship) {
         int XPos = ship.getPosition()[0];
         int YPos = ship.getPosition()[1];
@@ -70,7 +88,13 @@ public class Table {
         }
     }
 
-    protected void placeShip(Ship ship) {
+    /**
+     * Places a {@link Ship} on the table without checking it. (For invocation by {@link Player},
+     * typically not to be used by other classes)
+     *
+     * @param ship The {@link Ship} to be placed
+     */
+    void placeShip(Ship ship) {
         int XPos = ship.getPosition()[0];
         int YPos = ship.getPosition()[1];
         int length = ship.getLength();
