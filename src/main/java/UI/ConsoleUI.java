@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 /**
  * Responsible for communicating with the user.
- * Only this or other classes in the UI package should communicate
- * with the user, to separate the game logic and UI.
+ * Only this or other classes in the main.java.UI package should communicate
+ * with the user, to separate the game logic and main.java.UI.
  * This class collects inputs and forwards it to the {@link Game}.
  */
 
