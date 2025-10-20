@@ -50,11 +50,13 @@ public class Table {
             }
             available.add(4);
             available.add(5);
-        } else {
+        } else if (size == 10){
             available.add(2);
             available.add(3);
             available.add(4);
             available.add(5);
+        } else if (size < 10) {
+            throw new IllegalArgumentException("The table size must be bigger then 9x9");
         }
     }
 

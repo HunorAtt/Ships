@@ -57,7 +57,8 @@ public class Player {
         while (!table.isTableSet()) {
             try {
                 placeShip(new int[]{random.nextInt(table.getCells().length), random.nextInt(table.getCells()[0].length)}, Direction.values()[random.nextInt(Direction.values().length)], table.getAvailable().get(random.nextInt(table.getAvailable().size())));
-            } catch (Exception _) {
+            } catch (Exception ignore) {
+                // The code will try until it finds a correct spot to place the ship
             }
         }
     }
