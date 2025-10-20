@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 /**
  * Responsible for communicating with the user.
- * Only this or other classes in the UI package should communicate
- * with the user, to separate the game logic and UI.
+ * Only this or other classes in the main.java.UI package should communicate
+ * with the user, to separate the game logic and main.java.UI.
  * This class collects inputs and forwards it to the {@link Game}.
  */
 
@@ -43,7 +43,7 @@ public class ConsoleUI {
         }
         game.start(size);
         showTable();
-        while (game.areTablesSet()) {
+        while (!game.areTablesSet()) {
             shipPlacement();
         }
 
@@ -81,7 +81,6 @@ public class ConsoleUI {
                     break;
                 }
                 System.out.println("That's not a number!");
-                scanner.nextLine();
                 continue;
             }
             if (game.getPlayer().isValidLength(length)) {

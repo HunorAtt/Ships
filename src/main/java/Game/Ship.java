@@ -5,12 +5,12 @@ package Game;
  */
 public class Ship {
     private static int counter = 0;
-    private int shipNumber;
+    private final int shipNumber;
 
     private boolean isDestroyed;
-    private int[] position;                 // [0] x position, [1] y position
-    private Direction direction;
-    private int length;
+    private final int[] position;                 // [0] x position, [1] y position
+    private final Direction direction;
+    private final int length;
 
     /**
      * Constructor for a {@link Ship}. Creates it with the given attributes.
