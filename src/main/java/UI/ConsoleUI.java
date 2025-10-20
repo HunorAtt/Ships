@@ -43,7 +43,7 @@ public class ConsoleUI {
         }
         game.start(size);
         showTable();
-        while (game.areTablesSet()) {
+        while (!game.areTablesSet()) {
             shipPlacement();
         }
 
@@ -81,7 +81,6 @@ public class ConsoleUI {
                     break;
                 }
                 System.out.println("That's not a number!");
-                scanner.nextLine();
                 continue;
             }
             if (game.getPlayer().isValidLength(length)) {

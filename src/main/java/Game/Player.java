@@ -56,7 +56,7 @@ public class Player {
         Random random = new Random();
         while (!table.isTableSet()) {
             try {
-                placeShip(new int[]{random.nextInt(table.getCells().length), random.nextInt(table.getCells()[0].length)}, Direction.values()[random.nextInt(Direction.values().length)], table.getAvailable().getLast());
+                placeShip(new int[]{random.nextInt(table.getCells().length), random.nextInt(table.getCells()[0].length)}, Direction.values()[random.nextInt(Direction.values().length)], table.getAvailable().get(random.nextInt(table.getAvailable().size())));
             } catch (Exception _) {
             }
         }
