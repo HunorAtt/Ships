@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Table {
-    private final Cell[][] cells;           // cells[x coordinate][y coordinate]
+    private final Cell[][] cells;           // cells[x coordinate][y coordinate], numbering starts from top left corner
     private List<Ship> ships;
     private List<Integer> available;
 
