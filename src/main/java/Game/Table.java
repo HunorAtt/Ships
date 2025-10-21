@@ -20,6 +20,10 @@ public class Table {
      * @param size The size of length and width.
      */
     public Table(int size) {
+        if (size < 10) {
+            throw new IllegalArgumentException("The table size must be bigger then 9x9");
+        }
+
         this.cells = new Cell[size][size];
         available = new ArrayList<>();
         ships = new ArrayList<>();
@@ -50,13 +54,11 @@ public class Table {
             }
             available.add(4);
             available.add(5);
-        } else if (size == 10){
+        } else {
             available.add(2);
             available.add(3);
             available.add(4);
             available.add(5);
-        } else if (size < 10) {
-            throw new IllegalArgumentException("The table size must be bigger then 9x9");
         }
     }
 
