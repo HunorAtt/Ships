@@ -19,8 +19,7 @@ public class ConsoleUI {
     private final Game game = new Game();
 
     /**
-     * This method starts the {@link Game}. Asks the user for {@link Game.Table} size and calls
-     * the shipPlacement method until the table is set.
+     * This method starts the {@link Game}. Asks the user for {@link Game.Table} size.
      */
     public void start() {
         int size = -1;
@@ -42,15 +41,7 @@ public class ConsoleUI {
             }
         }
         game.start(size);
-        showTable();
-        while (!game.areTablesSet()) {
-            shipPlacement();
-        }
-
-        showTable();
-        System.out.println("Your table is set!");
-
-        gameLoop();
+        tableSetup();
     }
 
     /**
@@ -69,7 +60,7 @@ public class ConsoleUI {
             Direction direction;
 
 
-            String validNumbers = game.getPlayer().getTable().getAvailable().stream().map(String::valueOf).collect(Collectors.joining(", "));
+            String validNumbers = game.getCurrentPlayer().getTable().getAvailable().stream().map(String::valueOf).collect(Collectors.joining(", "));
             System.out.print("What length is your ship you want to add? (" + validNumbers + ") (if you want to skip this, type: random)\n");
 
             try {
@@ -77,13 +68,13 @@ public class ConsoleUI {
                 scanner.nextLine();
             } catch (Exception e) {
                 if (scanner.nextLine().equalsIgnoreCase("random")) {
-                    game.getPlayer().randomShipPlacement();
+                    game.getCurrentPlayer().randomShipPlacement();
                     break;
                 }
                 System.out.println("That's not a number!");
                 continue;
             }
-            if (game.getPlayer().isValidLength(length)) {
+            if (game.getCurrentPlayer().isValidLength(length)) {
                 while (true) {
                     showTable();
                     System.out.println("What position should it start from? (example: A01) (you can back with: back)");
@@ -106,7 +97,7 @@ public class ConsoleUI {
                             }
 
                             try {
-                                game.getPlayer().placeShip(position, direction ,length);
+                                game.getCurrentPlayer().placeShip(position, direction ,length);
                                 showTable();
                                 System.out.println("Ship placed!");
                                 return;
@@ -127,6 +118,17 @@ public class ConsoleUI {
         }
     }
 
+    public void tableSetup() {
+        while (!game.areTablesSet()) {
+            shipPlacement();
+        }
+
+        showTable();
+        System.out.println("Your tables are set!");
+
+        gameLoop();
+    }
+
     //TODO: <game loop>
     public void gameLoop() {
         while(true) {
@@ -136,7 +138,7 @@ public class ConsoleUI {
 
 
     public void showTable() {
-        Cell[][] cells = game.getPlayer().getTable().getCells();
+        Cell[][] cells = game.getCurrentPlayer().getTable().getCells();
 
         System.out.print("   ");
 

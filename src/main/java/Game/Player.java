@@ -44,7 +44,7 @@ public class Player {
         if (!isValidLength(length)) {
             throw new IllegalArgumentException("The ship length is not available!");
         }
-        table.validatePosition(ship);
+        table.validatePositionShip(ship);
         table.placeShip(ship);
     }
 
@@ -60,6 +60,10 @@ public class Player {
             } catch (Exception _) {
             }
         }
+    }
+
+    public void Shoot(int[] position) {
+
     }
 
     public Table getTable() {

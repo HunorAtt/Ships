@@ -66,7 +66,7 @@ public class Table {
      * @throws IndexOutOfBoundsException if the {@link Ship} is out of boundaries of the {@link Table}
      * @throws IllegalArgumentException if another {@link Ship} is in the way
      */
-    public void validatePosition(Ship ship) {
+    public void validatePositionShip(Ship ship) {
         int XPos = ship.getPosition()[0];
         int YPos = ship.getPosition()[1];
         int length = ship.getLength();
@@ -85,6 +85,16 @@ public class Table {
             if (cells[newX][newY].getState() == CellState.SHIP) {
                 throw new IllegalArgumentException("There is a ship in the way!\n");
             }
+        }
+    }
+
+    public void validatePosition(int[] position) {
+        int XPos = position[0];
+        int YPos = position[1];
+
+
+        if (XPos < 0 || YPos < 0 || XPos > cells.length || YPos > cells[0].length) {
+            throw new IndexOutOfBoundsException("Ship is out of boundaries!\n");
         }
     }
 

@@ -5,7 +5,10 @@ package Game;
  */
 
 public class Game {
-    private Player player;
+    private Player player1;
+    private Player player2;
+
+    private Player currentPlayer;
 
     /**
      * Creates instances of players and their tables. After the table is created,
@@ -15,15 +18,25 @@ public class Game {
      * @throws NullPointerException if {@code table} is {@code null}
      */
     public void start(int size) {
-        Table table = new Table(size);
-        player = new Player(table);
+        Table table1 = new Table(size);
+        player1 = new Player(table1);
+
+
+        Table table2 = new Table(size);
+        player2 = new Player(table2);
+
+
+    }
+
+    public void shoot() {
+
     }
 
     public boolean areTablesSet() {
-        return (player.getTable().isTableSet());
+        return player1.getTable().isTableSet() && player2.getTable().isTableSet();
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getCurrentPlayer() {
+        return CurrentPlayer;
     }
 }
