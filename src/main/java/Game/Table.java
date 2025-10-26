@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Table {
-    private final Cell[][] cells;           // cells[x coordinate][y coordinate]
+    private final Cell[][] cells;           // cells[x coordinate][y coordinate], numbering starts from top left corner
     private List<Ship> ships;
     private List<Integer> available;
 
@@ -20,6 +20,10 @@ public class Table {
      * @param size The size of length and width.
      */
     public Table(int size) {
+        if (size < 10) {
+            throw new IllegalArgumentException("The table size must be bigger then 9x9");
+        }
+
         this.cells = new Cell[size][size];
         available = new ArrayList<>();
         ships = new ArrayList<>();

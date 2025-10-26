@@ -3,6 +3,7 @@ package UI;
 import Game.Game;
 import Game.Cell;
 import Game.Direction;
+import Game.Table;
 
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -19,8 +20,8 @@ public class ConsoleUI {
     private final Game game = new Game();
 
     /**
-     * This method starts the {@link Game}. Asks the user for {@link Game.Table} size and calls
-     * the shipPlacement method until the table is set.
+     * This method starts the {@link Game}. Asks the user for {@link Table} size and calls
+     * the shipPlacement method until the table is set
      */
     public void start() {
         int size = -1;
