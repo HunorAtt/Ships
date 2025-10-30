@@ -3,6 +3,8 @@ package UI;
 import Game.Game;
 import Game.Cell;
 import Game.Direction;
+import Game.Table;
+import Game.Player;
 
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public class ConsoleUI {
     private final Game game = new Game();
 
     /**
-     * This method starts the {@link Game}. Asks the user for {@link Game.Table} size.
+     * This method starts the {@link Game}. Asks the user for {@link Table} size.
      */
     public void start() {
         int size = -1;
@@ -59,7 +61,7 @@ public class ConsoleUI {
             int[] position = new int[2];
             Direction direction;
 
-
+            showTable();
             String validNumbers = game.getCurrentPlayer().getTable().getAvailable().stream().map(String::valueOf).collect(Collectors.joining(", "));
             System.out.print("What length is your ship you want to add? (" + validNumbers + ") (if you want to skip this, type: random)\n");
 
@@ -118,9 +120,14 @@ public class ConsoleUI {
         }
     }
 
+
+    /**
+     * Sets up every {@link Player}'s {@link Table}.
+     */
     public void tableSetup() {
-        while (!game.areTablesSet()) {
+        while (!game.isTableSetUpPhase()) {
             shipPlacement();
+            showTable();
         }
 
         showTable();
@@ -136,7 +143,9 @@ public class ConsoleUI {
         }
     }
 
-
+    /**
+     * Shows the current state of the {@link Table}.
+     */
     public void showTable() {
         Cell[][] cells = game.getCurrentPlayer().getTable().getCells();
 

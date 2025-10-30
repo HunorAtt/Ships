@@ -14,7 +14,7 @@ public class Cell {
 
     public Cell() {
         this.state = CellState.EMPTY;
-        this.visibility = false;
+        this.visibility = true;
     }
 
     public CellState getState() {
