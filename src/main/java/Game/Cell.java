@@ -11,18 +11,40 @@ package Game;
 public class Cell {
     private CellState state;
     private boolean visibility;
+    private int shipID;
+    private int shipLenght;
 
     public Cell() {
         this.state = CellState.EMPTY;
         this.visibility = true;
     }
 
-    public CellState getState() {
-        return state;
+    public void setShip(Ship ship) {
+        this.state = CellState.SHIP;
+        shipID = ship.getShipID();
+        shipLenght = ship.getLength();
     }
 
-    public void setState(CellState state) {
-        this.state = state;
+    public void shoot() {
+        if (state == CellState.EMPTY) {
+            state = CellState.MISS;
+        } else if (state == CellState.SHIP) {
+            state = CellState.HIT;
+        } else {
+            throw new IllegalArgumentException("You already shot here!");
+        }
+    }
+
+    public int getShipID() {
+        return shipID;
+    }
+
+    public int getShipLenght() {
+        return shipLenght;
+    }
+
+    public CellState getState() {
+        return state;
     }
 
     public boolean isVisibility() {

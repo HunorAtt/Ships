@@ -5,12 +5,13 @@ package Game;
  */
 public class Ship {
     private static int counter = 0;
-    private final int shipNumber;
+    private final int shipID;
 
     private boolean isDestroyed;
     private final int[] position;                 // [0] x position, [1] y position
     private final Direction direction;
     private final int length;
+    private int hitPoint;
 
     /**
      * Constructor for a {@link Ship}. Creates it with the given attributes.
@@ -20,16 +21,17 @@ public class Ship {
      * @param length The length of the ship
      */
     public Ship(int[] position, Direction direction , int length) {
-        shipNumber = counter;
+        shipID = counter;
         counter++;
         this.isDestroyed = false;
         this.position = position;
         this.direction = direction;
         this.length = length;
+        this.hitPoint = length;
     }
 
-    public int getShipNumber() {
-        return shipNumber;
+    public int getShipID() {
+        return shipID;
     }
 
     public int getLength() {
@@ -44,11 +46,15 @@ public class Ship {
         return direction;
     }
 
-    public boolean isDestroyed() {
-        return isDestroyed;
+    public void hit() {
+        hitPoint--;
+
+        if (hitPoint == 0) {
+            isDestroyed = true;
+        }
     }
 
-    public void setDestroyed() {
-        isDestroyed = true;
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 }

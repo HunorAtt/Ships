@@ -1,16 +1,17 @@
 package Game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The {@link Player}'s table which they can interact with.
  * It builds up of {@link Cell}s.
  */
-
 public class Table {
-    private final Cell[][] cells;           // cells[x coordinate][y coordinate]
-    private List<Ship> ships;
+    private final Cell[][] grid;           // cells[x coordinate][y coordinate]
+    private Map<Integer, Ship> ships;
     private List<Integer> available;
 
 
@@ -20,13 +21,13 @@ public class Table {
      * @param size The size of length and width.
      */
     public Table(int size) {
-        this.cells = new Cell[size][size];
+        this.grid = new Cell[size][size];
         available = new ArrayList<>();
-        ships = new ArrayList<>();
+        ships = new HashMap<>();
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                cells[i][j] = new Cell();
+                grid[i][j] = new Cell();
             }
         }
 
@@ -78,23 +79,28 @@ public class Table {
             int newY = YPos + i * direction.dy();
 
 
-            if (newX < 0 || newY < 0 || newX > cells.length || newY > cells[0].length) {
+            if (newX < 0 || newY < 0 || newX > grid.length || newY > grid[0].length) {
                 throw new IndexOutOfBoundsException("Ship is out of boundaries!\n");
             }
 
-            if (cells[newX][newY].getState() == CellState.SHIP) {
+            if (grid[newX][newY].getState() == CellState.SHIP) {
                 throw new IllegalArgumentException("There is a ship in the way!\n");
             }
         }
     }
 
+    /**
+     * Checks if provided position is on the grid.
+     *
+     * @param position x and y coordinates of the position
+     */
     public void validatePosition(int[] position) {
         int XPos = position[0];
         int YPos = position[1];
 
 
-        if (XPos < 0 || YPos < 0 || XPos > cells.length || YPos > cells[0].length) {
-            throw new IndexOutOfBoundsException("Ship is out of boundaries!\n");
+        if (XPos < 0 || YPos < 0 || XPos > grid.length || YPos > grid[0].length) {
+            throw new IndexOutOfBoundsException("This position is not part of the grid!\n");
         }
     }
 
@@ -110,19 +116,44 @@ public class Table {
         int length = ship.getLength();
         Direction direction = ship.getDirection();
 
-        ships.add(ship);
+        ships.put(ship.getShipID(), ship);
         available.remove((Integer) ship.getLength());
 
         for (int i = 0; i < length; i++) {
             int newX = XPos + i * direction.dx();
             int newY = YPos + i * direction.dy();
-            cells[newX][newY].setState(CellState.SHIP);
+            grid[newX][newY].setShip(ship);
         }
 
     }
 
-    public Cell[][] getCells() {
-        return cells;
+    void hit(int[] position) {
+        grid[position[0]][position[1]].shoot();
+        grid[position[0]][position[1]].setVisibility(true);
+
+        if (grid[position[0]][position[1]].getState() == CellState.HIT) {
+            ships.get(grid[position[0]][position[1]].getShipID()).hit();
+
+            if (ships.get(grid[position[0]][position[1]].getShipID()).isDestroyed()) {
+                ships.remove(grid[position[0]][position[1]].getShipID());
+            }
+        }
+    }
+
+    public void hideShips() {
+        for (Cell[] cells : grid) {
+            for (Cell cell : cells) {
+                cell.setVisibility(false);
+            }
+        }
+    }
+
+    public boolean isEmpty() {
+        return ships.isEmpty();
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
     }
 
     public boolean isTableSet() {

@@ -2,5 +2,7 @@ package Game;
 
 public enum CellState {
     EMPTY,
-    SHIP
+    SHIP,
+    MISS,
+    HIT
 }

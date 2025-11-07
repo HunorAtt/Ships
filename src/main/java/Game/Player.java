@@ -1,6 +1,6 @@
 package Game;
 
-import java.util.Random;
+import java.util.List;
 
 /**
  * Player class is the base for players.
@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Player {
     private final Table table;
+    private boolean isAlive;
 
     /**
      * Player creation with {@link Table}.
@@ -17,14 +18,7 @@ public class Player {
      */
     public Player(Table table) {
         this.table = table;
-    }
-
-    /**
-     * @param length the length of the ship
-     * @return if the ship length is available
-     */
-    public boolean isValidLength(int length) {
-        return table.getAvailable().contains(length);
+        isAlive = true;
     }
 
     /**
@@ -39,7 +33,7 @@ public class Player {
      * @throws IndexOutOfBoundsException if the {@link Ship} is out of boundaries of the {@link Table}
      * @throws IllegalArgumentException if another {@link Ship} is in the way
      */
-    public void placeShip(int[] position, Direction direction ,int length) {
+    public void placeShip(int[] position, Direction direction, int length) {
         Ship ship = new Ship(position, direction ,length);
         if (!isValidLength(length)) {
             throw new IllegalArgumentException("The ship length is not available!");
@@ -48,25 +42,41 @@ public class Player {
         table.placeShip(ship);
     }
 
-    /**
-     * Creating a {@link Ship} with random parameters and checking if it can be placed,
-     * then giving it to its table to be placed.
-     */
-    public void randomShipPlacement() {
-        Random random = new Random();
-        while (!table.isTableSet()) {
-            try {
-                placeShip(new int[]{random.nextInt(table.getCells().length), random.nextInt(table.getCells()[0].length)}, Direction.values()[random.nextInt(Direction.values().length)], table.getAvailable().get(random.nextInt(table.getAvailable().size())));
-            } catch (Exception _) {
-            }
+    public void hit(int[] position) {
+        table.validatePosition(position);
+        table.hit(position);
+
+        if (table.isEmpty()) {
+            isAlive = false;
         }
     }
 
-    public void Shoot(int[] position) {
-
+    public void hideShips() {
+        table.hideShips();
     }
 
-    public Table getTable() {
-        return table;
+    /**
+     * @param length the length of the ship
+     * @return if the ship length is available
+     */
+    public boolean isValidLength(int length) {
+        return table.getAvailable().contains(length);
     }
+
+    public List<Integer> getAvailableShipLengths() {
+        return table.getAvailable();
+    }
+
+    public Cell[][] getGrid() {
+        return table.getGrid();
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public boolean isTableSet() {
+        return table.isTableSet();
+    }
+
 }

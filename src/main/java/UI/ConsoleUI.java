@@ -6,6 +6,7 @@ import Game.Direction;
 import Game.Table;
 import Game.Player;
 
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -15,10 +16,13 @@ import java.util.stream.Collectors;
  * with the user, to separate the game logic and main.java.UI.
  * This class collects inputs and forwards it to the {@link Game}.
  */
-
 public class ConsoleUI {
     private final Scanner scanner = new Scanner(System.in);
-    private final Game game = new Game();
+    private final Game game;
+
+    public ConsoleUI(Game game) {
+        this.game = game;
+    }
 
     /**
      * This method starts the {@link Game}. Asks the user for {@link Table} size.
@@ -62,7 +66,7 @@ public class ConsoleUI {
             Direction direction;
 
             showTable();
-            String validNumbers = game.getCurrentPlayer().getTable().getAvailable().stream().map(String::valueOf).collect(Collectors.joining(", "));
+            String validNumbers = game.getAvailableShipLengths().stream().map(String::valueOf).collect(Collectors.joining(", "));
             System.out.print("What length is your ship you want to add? (" + validNumbers + ") (if you want to skip this, type: random)\n");
 
             try {
@@ -70,13 +74,13 @@ public class ConsoleUI {
                 scanner.nextLine();
             } catch (Exception e) {
                 if (scanner.nextLine().equalsIgnoreCase("random")) {
-                    game.getCurrentPlayer().randomShipPlacement();
+                    game.placeShipsAutomatically();
                     break;
                 }
                 System.out.println("That's not a number!");
                 continue;
             }
-            if (game.getCurrentPlayer().isValidLength(length)) {
+            if (game.isValidLength(length)) {
                 while (true) {
                     showTable();
                     System.out.println("What position should it start from? (example: A01) (you can back with: back)");
@@ -99,7 +103,7 @@ public class ConsoleUI {
                             }
 
                             try {
-                                game.getCurrentPlayer().placeShip(position, direction ,length);
+                                game.placeShip(position, direction ,length);
                                 showTable();
                                 System.out.println("Ship placed!");
                                 return;
@@ -125,12 +129,19 @@ public class ConsoleUI {
      * Sets up every {@link Player}'s {@link Table}.
      */
     public void tableSetup() {
-        while (!game.isTableSetUpPhase()) {
+        while (game.isSetUpPhase()) {
+            clearConsole();
             shipPlacement();
             showTable();
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        showTable();
+        clearConsole();
+
         System.out.println("Your tables are set!");
 
         gameLoop();
@@ -138,37 +149,69 @@ public class ConsoleUI {
 
     //TODO: <game loop>
     public void gameLoop() {
-        while(true) {
+        while(game.isFightPhase()) {
+            System.out.println(game.getCurrentPlayer() + ". player's turn!");
+            showTable();
+            System.out.println("Where do you want to shoot? (example: A01)");
 
+            int[] position = new int[2];
+            String temp = scanner.nextLine().toUpperCase();
+            if (temp.length() == 3 && Character.isLetter(temp.charAt(0)) && Character.isDigit(temp.charAt(1)) && Character.isDigit(temp.charAt(2))) {
+                position[0] = temp.charAt(0) - 'A';
+                position[1] = (temp.charAt(1) - '0') * 10 + (temp.charAt(2) - '1');
+            }
+
+            try {
+                game.shoot(position);
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
+            showTable();
+
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            clearConsole();
         }
+
+        finish();
     }
 
     /**
-     * Shows the current state of the {@link Table}.
+     * In setup phase shows the current player's {@link Table}. In fight phase it shows the enemy's {@link Table}.
      */
-    public void showTable() {
-        Cell[][] cells = game.getCurrentPlayer().getTable().getCells();
+    private void showTable() {
+        Cell[][] grid = game.getGrid();
 
         System.out.print("   ");
 
-        for (int i = 0; i < cells.length; i++) {
+        for (int i = 0; i < grid.length; i++) {
             System.out.print((char)(i + 65) + " ");
         }
         System.out.println();
 
-        for (int i = 0; i < cells.length; i++) {
+        for (int i = 0; i < grid.length; i++) {
             if (i < 9) System.out.print("0");
             System.out.print(i + 1);
 
-            for (int j = 0; j < cells[i].length; j++) {
-                if (cells[j][i].isVisibility()) {
-                    switch (cells[j][i].getState()) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[j][i].isVisibility()) {
+                    switch (grid[j][i].getState()) {
                         case EMPTY :
                             System.out.print(" .");
                             break;
                         case SHIP :
+                            System.out.print(" " + grid[j][i].getShipLenght());
+                            break;
+                        case HIT :
                             System.out.print(" X");
                             break;
+                        case MISS:
+                            System.out.print(" ~");
                     }
                 } else {
                     System.out.print(" *");
@@ -178,8 +221,16 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * WIP. For now it just print
+     */
+    private void clearConsole() {
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    }
+
     // TODO: <winning/losing screen>
     public void finish() {
+        System.out.println(game.getCurrentPlayer() + " player wins!");
         scanner.close();
     }
 }
